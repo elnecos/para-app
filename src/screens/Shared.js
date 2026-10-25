@@ -81,10 +81,6 @@ export function Verdict({ ph }) {
 
 export const textStyles = StyleSheet.create({
   body: { color: C.fg, fontSize: 16, lineHeight: 22 },
-  contra: { borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
-  contraTitle: { fontWeight: '700', fontSize: 15 },
-  contraText: { color: C.fg, fontSize: 15, lineHeight: 21 },
-  contraNote: { color: C.muted, fontSize: 13, lineHeight: 18 },
 });
 
 const s = StyleSheet.create({
@@ -101,6 +97,10 @@ const s = StyleSheet.create({
   pill: { alignSelf: 'flex-start', borderRadius: 99, paddingHorizontal: 10, paddingVertical: 3 },
   pillText: { color: '#fff', fontWeight: '600', fontSize: 13 },
   body: { color: C.fg, fontSize: 16, lineHeight: 22 },
+  contra: { borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
+  contraTitle: { fontWeight: '700', fontSize: 15 },
+  contraText: { color: C.fg, fontSize: 15, lineHeight: 21 },
+  contraNote: { color: C.muted, fontSize: 13, lineHeight: 18 },
 });
 
 // Karta „Kiedy był stosunek” — wspólna dla obu ekranów
