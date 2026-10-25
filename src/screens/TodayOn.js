@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Share, StyleSheet, Text, View } from 'react-native';
 import { COLORS as C, PH, SIGNALS } from '../content';
-import { Button, Card, DayGrid, H2, Label, Legend, Muted, weeksFrom } from '../ui';
-import { Header, Screen, TodayCard, Verdict } from './Shared';
+import { Button, Card, DayGrid, H2, Label, Legend, Muted, dayMarks, weeksFrom } from '../ui';
+import { Header, Screen, SexCard, TodayCard, Verdict } from './Shared';
 
-export default function TodayOn({ cycle, now, todayIso, signal, state, status, refresh }) {
+export default function TodayOn({ cycle, now, todayIso, signal, state, status, refresh, send }) {
   const [shift, setShift] = useState(0);
 
   const sig = signal ? (
@@ -30,7 +30,7 @@ export default function TodayOn({ cycle, now, todayIso, signal, state, status, r
 
   const ph = cycle.info(now).ph, p = PH[ph];
   const msgs = p.msgs, idx = (Math.floor(now / 864e5) + shift) % msgs.length;
-  const marks = Object.fromEntries(state.periods.map((x) => [x.s, '•']));
+  const marks = dayMarks(state);
 
   return (
     <Screen refresh={refresh}>
@@ -39,6 +39,8 @@ export default function TodayOn({ cycle, now, todayIso, signal, state, status, r
       <TodayCard cycle={cycle} now={now}>
         <Verdict ph={ph} />
       </TodayCard>
+
+      <SexCard state={state} now={now} todayIso={todayIso} send={send} role="on" cycle={cycle} />
 
       <Card>
         <H2>Instrukcja na dziś</H2>

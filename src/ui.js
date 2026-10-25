@@ -74,6 +74,13 @@ export function monthDays(year, month) {
   return [...Array(lead).fill(null), ...Array.from({ length: dim }, (_, i) => new Date(year, month, i + 1, 12))];
 }
 
+export function dayMarks(state) {
+  const m = {};
+  for (const p of state.periods) m[p.s] = '•';
+  for (const d of state.sex) m[d] = (m[d] ? m[d] + ' ' : '') + '♥';
+  return m;
+}
+
 export const phaseColor = (ph) => C[ph];
 export const phaseName = (ph) => PH[ph].name;
 
@@ -96,5 +103,5 @@ const s = StyleSheet.create({
   cell: { flex: 1, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
   today: { borderWidth: 2, borderColor: C.fg },
   cellText: { color: C.fg, fontSize: 14, fontVariant: ['tabular-nums'] },
-  mark: { position: 'absolute', top: 1, right: 3, fontSize: 9 },
+  mark: { position: 'absolute', top: 1, right: 3, fontSize: 9, color: C.ov },
 });

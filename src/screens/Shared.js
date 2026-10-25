@@ -1,9 +1,10 @@
 // Elementy wspólne dla obu ekranów „Dziś”
+import { useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS as C, PH } from '../content';
-import { Card, Muted, Label } from '../ui';
-import { addDays, dni, isHot } from '../cycle';
+import { Button, Card, H2, Muted, Label } from '../ui';
+import { addDays, diffDays, dni, isHot, iso, parse } from '../cycle';
 
 export function Screen({ children, refresh }) {
   const insets = useSafeAreaInsets();
@@ -96,3 +97,40 @@ const s = StyleSheet.create({
   pillText: { color: '#fff', fontWeight: '600', fontSize: 13 },
   body: { color: C.fg, fontSize: 16, lineHeight: 22 },
 });
+
+// Karta „Kiedy był stosunek” — wspólna dla obu ekranów
+export function SexCard({ state, now, todayIso, send, role, cycle }) {
+  const [busy, setBusy] = useState(false);
+  const yIso = iso(addDays(now, -1));
+  const past = state.sex.filter((d) => d <= todayIso);
+  const add = async (d) => { setBusy(true); try { await send({ t: 'sex', d }); } catch {} setBusy(false); };
+
+  let line = 'Brak wpisów. Zaznacz, gdy coś się wydarzy.', tip = null;
+  if (past.length) {
+    const last = past[past.length - 1], ago = diffDays(now, parse(last));
+    const week = past.filter((d) => diffDays(now, parse(d)) < 7).length;
+    const when = ago === 0 ? 'dziś' : ago === 1 ? 'wczoraj' : `${ago} dni temu (${fmtDay(parse(last))})`;
+    line = `Ostatnio: ${when} · w ostatnich 7 dniach: ${week} ${week === 1 ? 'raz' : 'razy'}`;
+    if (role === 'on') {
+      const hot = cycle && isHot(cycle.info(now));
+      if (ago === 0) tip = 'Dziś już było. Przytulajcie się i odpoczywajcie.';
+      else if (ago === 1) tip = hot ? 'Wczoraj było, ale to dni płodne, więc dziś też możesz spróbować. Delikatnie i bez nacisku.' : 'Wczoraj było. Dziś bez marudzenia: przytul ją i daj odpocząć.';
+      else if (ago <= 3) tip = 'Jest dobrze. Jeśli macie ochotę, zacznij od czułości.';
+      else tip = cycle && cycle.info(now).ph === 'okres' ? 'Trwa okres, więc cierpliwości. Czułość zamiast nacisku.' : 'Minęło kilka dni. Dobry moment, żeby zacząć od masażu albo pocałunków.';
+    }
+  }
+  const doneToday = state.sex.includes(todayIso), doneY = state.sex.includes(yIso);
+
+  return (
+    <Card>
+      <H2>Kiedy był stosunek</H2>
+      <Text style={s.body}>{line}</Text>
+      {tip ? <Muted>{tip}</Muted> : null}
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <Button title={doneToday ? 'Dziś ♥' : 'Był dziś'} onPress={() => add(todayIso)} disabled={busy || doneToday} style={{ flex: 1 }} />
+        <Button title={doneY ? 'Wczoraj ♥' : 'Był wczoraj'} kind="ghost" onPress={() => add(yIso)} disabled={busy || doneY} style={{ flex: 1 }} />
+      </View>
+      <Muted style={{ fontSize: 13 }}>Inne dni zaznaczysz i usuniesz w kalendarzu. Widzicie to oboje.</Muted>
+    </Card>
+  );
+}

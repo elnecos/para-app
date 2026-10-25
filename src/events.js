@@ -31,11 +31,14 @@ export function subscribe(cfg, onChange) {
 // Stan pary z listy wpisów (ostatni wpis wygrywa)
 export function reduce(events) {
   const periods = new Map();
+  const sex = new Set();
   let signals = [];
   for (const e of events) {
     if (e.t === 'period') periods.set(e.s, { s: e.s, n: e.n });
     else if (e.t === 'period_del') periods.delete(e.s);
     else if (e.t === 'signal') signals.push(e);
+    else if (e.t === 'sex') sex.add(e.d);
+    else if (e.t === 'sex_del') sex.delete(e.d);
   }
-  return { periods: [...periods.values()].sort((a, b) => (a.s < b.s ? -1 : 1)), signals };
+  return { periods: [...periods.values()].sort((a, b) => (a.s < b.s ? -1 : 1)), signals, sex: [...sex].sort() };
 }
