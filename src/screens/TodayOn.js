@@ -36,7 +36,7 @@ export default function TodayOn({ cycle, now, todayIso, signal, state, status, r
     <Screen refresh={refresh}>
       <Header now={now} status={status} />
       {sig}
-      <TodayCard cycle={cycle} now={now}>
+      <TodayCard cycle={cycle} now={now} contra={state.contra}>
         <Verdict ph={ph} />
       </TodayCard>
 

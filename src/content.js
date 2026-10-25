@@ -62,3 +62,37 @@ export const SIGNALS = {
   przytul: { label: 'Chcę się przytulić', emoji: '🤗', forHim: 'Dziś czułość: przytulanie, bez oczekiwań.' },
   nie: { label: 'Dziś odpoczywam', emoji: '🌙', forHim: 'Dziś daj jej odpocząć. Zapytaj, czy czegoś potrzebuje.' },
 };
+
+// Antykoncepcja. Poziomy: safe (szerokiej drogi), watch (pilnuj), risk (ryzyko), baby (staracie się).
+// Skuteczność przy typowym stosowaniu (odsetek par bez ciąży w ciągu roku), wg CDC.
+export const CONTRA = {
+  brak: { label: 'Bez zabezpieczenia', level: 'risk', eff: null,
+    tip: 'W dni płodne ryzyko ciąży jest najwyższe. Jeśli nie planujecie dziecka, zabezpieczcie się.' },
+  dziecko: { label: 'Staramy się o dziecko', level: 'baby', eff: null,
+    tip: 'To najlepsze dni na poczęcie. Stosunek co 1–2 dni w dniach płodnych daje największe szanse.' },
+  prezerwatywa: { label: 'Prezerwatywa', level: 'watch', eff: 'ok. 87%',
+    tip: 'Prezerwatywa przy każdym stosunku, od początku do końca. Sprawdź zapas i datę ważności.' },
+  tabletki: { label: 'Tabletki antykoncepcyjne', level: 'watch', eff: 'ok. 93%', daily: true, suppresses: true,
+    tip: 'Pilnuj tabletki codziennie o stałej porze. Po pominiętej tabletce, wymiotach lub biegunce sprawdź ulotkę i używajcie dodatkowo prezerwatywy.' },
+  hormonalna: { label: 'Plaster, krążek lub zastrzyk', level: 'watch', eff: '93–96%', suppresses: true,
+    tip: 'Pilnuj terminu zmiany plastra, krążka albo kolejnego zastrzyku. Po spóźnieniu sprawdź ulotkę.' },
+  wkladka_horm: { label: 'Wkładka hormonalna', level: 'safe', eff: 'ponad 99%',
+    tip: 'Szerokiej drogi. Pamiętajcie tylko o kontrolach u ginekologa i terminie wymiany wkładki.' },
+  wkladka_mied: { label: 'Wkładka miedziana', level: 'safe', eff: 'ponad 99%',
+    tip: 'Szerokiej drogi. Pamiętajcie tylko o kontrolach u ginekologa i terminie wymiany wkładki.' },
+  implant: { label: 'Implant', level: 'safe', eff: 'ponad 99%', suppresses: true,
+    tip: 'Szerokiej drogi. Pamiętajcie o terminie wymiany implantu.' },
+  wazektomia_ok: { label: 'Wazektomia (potwierdzona badaniem)', level: 'safe', eff: 'ponad 99%',
+    tip: 'Szerokiej drogi. Badanie nasienia potwierdziło brak plemników.' },
+  wazektomia_czeka: { label: 'Wazektomia (przed badaniem kontrolnym)', level: 'watch', eff: null,
+    tip: 'Po wazektomii plemniki są jeszcze obecne przez kilka miesięcy. Do czasu badania nasienia, które potwierdzi ich brak, używajcie innej antykoncepcji.' },
+  naturalne: { label: 'Stosunek przerywany lub metody naturalne', level: 'risk', eff: '78–98%',
+    tip: 'Te metody są zawodne, a w dni płodne ryzyko jest najwyższe. Rozważcie prezerwatywę.' },
+};
+
+export const CONTRA_LEVEL = {
+  safe: { title: 'Szerokiej drogi', color: '#2f8f5b' },
+  watch: { title: 'Pilnujcie zabezpieczenia', color: '#c98a1b' },
+  risk: { title: 'Uwaga: dni płodne', color: '#c8344a' },
+  baby: { title: 'Najlepszy czas na dziecko', color: '#d9558f' },
+};

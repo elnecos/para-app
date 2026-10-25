@@ -38,7 +38,7 @@ export default function TodayOna({ cycle, state, now, todayIso, signal, send, go
           <Button title="Otwórz kalendarz" onPress={() => goTo('kal')} />
         </Card>
       ) : (
-        <TodayCard cycle={cycle} now={now}>
+        <TodayCard cycle={cycle} now={now} contra={state.contra}>
           <Verdict ph={cycle.info(now).ph} />
         </TodayCard>
       )}

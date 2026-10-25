@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { COLORS as C, PH } from '../content';
+import { COLORS as C, CONTRA, CONTRA_LEVEL, PH } from '../content';
 import { Button, Card, H2, Muted, Label } from '../ui';
 import { addDays, diffDays, dni, isHot, iso, parse } from '../cycle';
 
@@ -46,7 +46,7 @@ export function cycleNumbers(cycle, now) {
   return { today, toOv, toP, spicy };
 }
 
-export function TodayCard({ cycle, now, children }) {
+export function TodayCard({ cycle, now, children, contra }) {
   const { today, toOv, toP, spicy } = cycleNumbers(cycle, now);
   const p = PH[today.ph], col = C[today.ph];
   return (
@@ -64,6 +64,7 @@ export function TodayCard({ cycle, now, children }) {
         {toOv === 0 ? 'Owulacja: dziś. ' : `Owulacja za ${dni(toOv)}. `}Następny okres za {dni(toP)}.
       </Muted>
       <View style={[s.spicy, { borderColor: C.ov + '70' }]}><Text style={s.spicyText}>{spicy}</Text></View>
+      <ContraBanner contra={contra} hot={isHot(today)} />
     </Card>
   );
 }
@@ -80,6 +81,10 @@ export function Verdict({ ph }) {
 
 export const textStyles = StyleSheet.create({
   body: { color: C.fg, fontSize: 16, lineHeight: 22 },
+  contra: { borderWidth: 1, borderRadius: 12, padding: 12, gap: 4 },
+  contraTitle: { fontWeight: '700', fontSize: 15 },
+  contraText: { color: C.fg, fontSize: 15, lineHeight: 21 },
+  contraNote: { color: C.muted, fontSize: 13, lineHeight: 18 },
 });
 
 const s = StyleSheet.create({
@@ -132,5 +137,20 @@ export function SexCard({ state, now, todayIso, send, role, cycle }) {
       </View>
       <Muted style={{ fontSize: 13 }}>Inne dni zaznaczysz i usuniesz w kalendarzu. Widzicie to oboje.</Muted>
     </Card>
+  );
+}
+
+// Informacja o antykoncepcji: zawsze w dni płodne, a przy codziennych tabletkach codziennie
+export function ContraBanner({ contra, hot }) {
+  if (!contra) return null;
+  const m = CONTRA[contra];
+  if (!m || (!hot && !m.daily)) return null;
+  const lv = CONTRA_LEVEL[m.level];
+  return (
+    <View style={[s.contra, { backgroundColor: lv.color + '1f', borderColor: lv.color }]}>
+      <Text style={[s.contraTitle, { color: lv.color }]}>{lv.title} · {m.label}</Text>
+      <Text style={s.contraText}>{m.tip}</Text>
+      {m.suppresses ? <Text style={s.contraNote}>Przy tej metodzie owulacja zwykle nie zachodzi, więc fazy w aplikacji to orientacyjny rytm nastroju, a nie płodności.</Text> : null}
+    </View>
   );
 }

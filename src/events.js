@@ -33,12 +33,14 @@ export function reduce(events) {
   const periods = new Map();
   const sex = new Set();
   let signals = [];
+  let contra = null;
   for (const e of events) {
     if (e.t === 'period') periods.set(e.s, { s: e.s, n: e.n });
     else if (e.t === 'period_del') periods.delete(e.s);
     else if (e.t === 'signal') signals.push(e);
     else if (e.t === 'sex') sex.add(e.d);
     else if (e.t === 'sex_del') sex.delete(e.d);
+    else if (e.t === 'contra') contra = e.m;
   }
-  return { periods: [...periods.values()].sort((a, b) => (a.s < b.s ? -1 : 1)), signals, sex: [...sex].sort() };
+  return { periods: [...periods.values()].sort((a, b) => (a.s < b.s ? -1 : 1)), signals, sex: [...sex].sort(), contra };
 }
