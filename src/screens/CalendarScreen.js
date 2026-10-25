@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { COLORS as C, PH } from '../content';
-import { Button, Card, DayGrid, H2, Legend, Muted, monthDays } from '../ui';
+import { Button, Card, DayGrid, H2, Legend, Muted, dayMarks, monthDays } from '../ui';
 import { addDays, iso } from '../cycle';
 import { Header, Screen } from './Shared';
 
@@ -13,7 +13,7 @@ export default function CalendarScreen({ cfg, cycle, state, now, todayIso, send,
   const isOna = cfg.role === 'ona';
 
   const move = (k) => { const d = new Date(ym.y, ym.m + k, 1); setYm({ y: d.getFullYear(), m: d.getMonth() }); setSel(null); };
-  const marks = Object.fromEntries(state.periods.map((x) => [x.s, '•']));
+  const marks = dayMarks(state);
   const selIso = sel ? iso(sel) : null;
   const selPeriod = state.periods.find((p) => p.s === selIso);
   const selInfo = sel && cycle ? cycle.info(sel) : null;
@@ -38,13 +38,20 @@ export default function CalendarScreen({ cfg, cycle, state, now, todayIso, send,
           <Pressable onPress={() => move(1)} hitSlop={12}><Text style={s.arrow}>›</Text></Pressable>
         </View>
         <DayGrid days={monthDays(ym.y, ym.m)} cycle={cycle} todayIso={todayIso} marked={marks} onPress={setSel} />
-        {cycle ? <Legend /> : <Muted>{isOna ? 'Dotknij dnia, w którym zaczął się okres.' : 'Ona jeszcze nie wpisała okresów.'}</Muted>}
+        {cycle ? <><Legend /><Muted style={{ fontSize: 13 }}>• początek okresu   ♥ stosunek</Muted></> : <Muted>{isOna ? 'Dotknij dnia, w którym zaczął się okres.' : 'Ona jeszcze nie wpisała okresów.'}</Muted>}
       </Card>
 
       {sel ? (
         <Card>
           <H2>{sel.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' })}</H2>
           {selInfo ? <Muted>Dzień cyklu {selInfo.cd} · {PH[selInfo.ph].name}</Muted> : null}
+          {sel <= now ? (
+            state.sex.includes(selIso) ? (
+              <Button title="Usuń zaznaczenie stosunku ♥" kind="ghost" onPress={() => act({ t: 'sex_del', d: selIso })} disabled={busy} />
+            ) : (
+              <Button title="Zaznacz stosunek ♥" kind="ghost" onPress={() => act({ t: 'sex', d: selIso })} disabled={busy} />
+            )
+          ) : null}
           {isOna && selPeriod ? (
             <>
               <Muted>Tego dnia zaczął się okres ({selPeriod.n} dni).</Muted>

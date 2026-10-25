@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { COLORS as C, SIGNALS } from '../content';
 import { Button, Card, H2, Muted } from '../ui';
-import { Header, Screen, TodayCard, Verdict } from './Shared';
+import { Header, Screen, SexCard, TodayCard, Verdict } from './Shared';
 
 export default function TodayOna({ cycle, state, now, todayIso, signal, send, goTo, status, refresh }) {
   const [pick, setPick] = useState(null);
@@ -72,6 +72,8 @@ export default function TodayOna({ cycle, state, now, todayIso, signal, send, go
         <Button title={busy ? 'Wysyłam…' : 'Wyślij'} onPress={sendSignal} disabled={!pick || busy} />
         {msg ? <Muted>{msg}</Muted> : null}
       </Card>
+
+      <SexCard state={state} now={now} todayIso={todayIso} send={send} role="ona" cycle={cycle} />
 
       {cycle ? (
         <Card>
